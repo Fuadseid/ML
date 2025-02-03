@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Import useEffect
 import { motion, AnimatePresence } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,6 +21,35 @@ function Form() {
   const [prediction, setPrediction] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
+
+  // Example: Fetch initial data when the component mounts
+  useEffect(() => {
+    // You can fetch some initial data here
+    console.log("Component mounted or updated");
+
+    // Example: Fetch some default data
+    const fetchDefaultData = async () => {
+      try {
+        const response = await fetch(BASE_URL);
+        if (!response.ok) {
+          throw new Error("Failed to fetch default data");
+        }
+        const data = await response.json();
+        console.log("Default data:", data);
+      } catch (error) {
+        console.error("Error fetching default data:", error);
+      }
+    };
+
+    fetchDefaultData();
+  }, []); // Empty dependency array means this runs only once on mount
+
+  // Example: Watch for changes in prediction and show modal
+  useEffect(() => {
+    if (prediction !== null) {
+      setShowModal(true);
+    }
+  }, [prediction]); // This effect runs whenever `prediction` changes
 
   function handleChange(event) {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -66,7 +95,6 @@ function Form() {
 
       const data = await response.json();
       setPrediction(data.prediction);
-      setShowModal(true);
     } catch (error) {
       console.error("Error fetching prediction:", error);
       toast.error("Failed to fetch prediction. Please try again later.", {
