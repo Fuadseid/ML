@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; // Import useEffect
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,34 +22,12 @@ function Form() {
   const [showModal, setShowModal] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
 
-  // Example: Fetch initial data when the component mounts
-  useEffect(() => {
-    // You can fetch some initial data here
-    console.log("Component mounted or updated");
-
-    // Example: Fetch some default data
-    const fetchDefaultData = async () => {
-      try {
-        const response = await fetch(BASE_URL);
-        if (!response.ok) {
-          throw new Error("Failed to fetch default data");
-        }
-        const data = await response.json();
-        console.log("Default data:", data);
-      } catch (error) {
-        console.error("Error fetching default data:", error);
-      }
-    };
-
-    fetchDefaultData();
-  }, []); // Empty dependency array means this runs only once on mount
-
-  // Example: Watch for changes in prediction and show modal
+  // Watch for changes in prediction and show modal
   useEffect(() => {
     if (prediction !== null) {
-      setShowModal(true);
+      setShowModal(true); // Show modal when prediction is set
     }
-  }, [prediction]); // This effect runs whenever `prediction` changes
+  }, [prediction]);
 
   function handleChange(event) {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -94,7 +72,7 @@ function Form() {
       }
 
       const data = await response.json();
-      setPrediction(data.prediction);
+      setPrediction(data.prediction); // Set prediction
     } catch (error) {
       console.error("Error fetching prediction:", error);
       toast.error("Failed to fetch prediction. Please try again later.", {
@@ -110,7 +88,6 @@ function Form() {
     }
   }
 
-  // Framer Motion Variants
   const formVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
@@ -209,7 +186,10 @@ function Form() {
                 )}
               </p>
               <motion.button
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  setShowModal(false); // Close modal
+                  setPrediction(null); // Reset prediction
+                }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="mt-6 w-full bg-gradient-to-r from-red-500 to-pink-500 text-white py-3 rounded-lg text-lg font-semibold shadow-lg hover:from-red-600 hover:to-pink-600 transition-all"
